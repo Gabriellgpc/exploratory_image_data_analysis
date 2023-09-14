@@ -1,0 +1,5 @@
+fiftyone
+opencv-python
+click
+tqdm
+umap-learn
