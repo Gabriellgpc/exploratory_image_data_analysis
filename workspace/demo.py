@@ -2,7 +2,7 @@
 # @Author: Luis Condados
 # @Date:   2023-09-09 18:46:06
 # @Last Modified by:   Luis Condados
-# @Last Modified time: 2023-09-10 18:09:38
+# @Last Modified time: 2023-09-16 18:33:43
 
 import fiftyone as fo
 import fiftyone.zoo as foz
@@ -27,7 +27,7 @@ def create_dataset_from_dir(images_dir, name=None, persistent=False):
 @click.option('--images_dir', '-i')
 @click.option('--dataset_name', '--name', '-n')
 @click.option('--persistent', '-p', type=bool, default=True, is_flag=True)
-@click.option('--n_clusters', default=None)
+@click.option('--n_clusters', default=None, type=int)
 def main(images_dir, dataset_name, persistent, n_clusters):
 
     if fo.dataset_exists(dataset_name):
@@ -54,12 +54,14 @@ def main(images_dir, dataset_name, persistent, n_clusters):
                               embeddings=embeddings,
                               )
 
+    # to enable the "search for similarity" feature
+    fob.compute_similarity(dataset, embeddings=embeddings)
+
     ####################
     # K-means Clustering
     ####################
     if n_clusters != None:
         logging.info('Computing k-means clustering ...')
-        # TODO: change the "n_clusters" variable
         k_means = KMeans(init="k-means++", n_clusters=n_clusters, n_init=10)
         k_means.fit(embeddings)
 
